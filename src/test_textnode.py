@@ -1,6 +1,6 @@
 import unittest
 
-from textnode import TextNode, TextType, text_node_to_html_node
+from textnode import TextNode, TextType, text_node_to_html_node, split_nodes_delimiter
 
 
 class TestTextNode(unittest.TestCase):
@@ -52,7 +52,36 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(html_node.props["alt"], "This is an image node")
         self.assertEqual(html_node.to_html(), "<img src=\"https://www.google.com/image.png\" alt=\"This is an image node\"/>")
 
+    def test_delimiter_code(self):
+        node = TextNode("This is text with a `code block` word.", TextType.TEXT)
+        new_nodes = split_nodes_delimiter([node], "`", TextType.CODE)
+        self.assertEqual(len(new_nodes), 3)
+        self.assertEqual(new_nodes[1].text_type, TextType.CODE)
+        self.assertEqual(new_nodes[0].text, "This is text with a ")
+        self.assertEqual(new_nodes[1].text, "code block")
+        self.assertEqual(new_nodes[2].text, " word.")
 
+    def test_delimiter_bold(self):
+        node = TextNode("This is text with a **bold** word.", TextType.TEXT)
+        new_nodes = split_nodes_delimiter([node], "**", TextType.BOLD)
+        self.assertEqual(len(new_nodes), 3)
+        self.assertEqual(new_nodes[1].text_type, TextType.BOLD)
+        self.assertEqual(new_nodes[0].text, "This is text with a ")
+        self.assertEqual(new_nodes[1].text, "bold")
+        self.assertEqual(new_nodes[2].text, " word.")
+
+    def test_delimiter_italic(self):
+        node = TextNode("This is text with a _italic_ word.", TextType.TEXT)
+        new_nodes = split_nodes_delimiter([node], "_", TextType.ITALIC)
+        self.assertEqual(len(new_nodes), 3)
+        self.assertEqual(new_nodes[1].text_type, TextType.ITALIC)
+        self.assertEqual(new_nodes[0].text, "This is text with a ")
+        self.assertEqual(new_nodes[1].text, "italic")
+        self.assertEqual(new_nodes[2].text, " word.")
+
+    def test_delimiter_missing(self):
+        node = TextNode("This is text with a missing `delimiter.", TextType.TEXT)
+        self.assertRaises(ValueError, lambda: split_nodes_delimiter([node], "`", TextType.CODE))
 
 if __name__ == "__main__":
     unittest.main()

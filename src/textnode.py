@@ -1,3 +1,5 @@
+import re
+from typing import List, Tuple
 from enum import Enum
 
 from leafnode import LeafNode
@@ -41,3 +43,42 @@ def text_node_to_html_node(text_node: TextNode):
             return LeafNode("img", "", {"src": text_node.url, "alt": text_node.text})
         case _:
             raise ValueError(f"Unsupported text type: {text_node.text_type}")
+
+
+def split_nodes_delimiter(old_nodes: list[TextNode], delimiter: str, text_type: TextType):
+    new_nodes = []
+    for node in old_nodes:
+        if node.text_type != TextType.TEXT:
+            new_nodes.append(node)
+            continue
+
+        parts, indices = split_by_delimiter_with_indexes(node.text, delimiter)
+        for i in range(len(parts)):
+            if i in indices:
+                new_nodes.append(TextNode(parts[i], text_type))
+            else:
+                new_nodes.append(TextNode(parts[i], TextType.TEXT))
+
+    return new_nodes
+
+def split_by_delimiter_with_indexes(text: str, delimiter: str) -> Tuple[List[str], List[int]]:
+    d = re.escape(delimiter)
+    pattern = re.compile(rf"{d}(.*?){d}")
+
+    parts: List[str] = []
+    delimited_indexes: List[int] = []
+
+    matches = list(pattern.finditer(text))
+    if text.count(delimiter) != len(matches) * 2:
+        raise ValueError(f"Unclosed delimiter: {delimiter}")
+
+    last_end = 0
+    for match in pattern.finditer(text):
+        parts.append(text[last_end:match.start()])
+        parts.append(match.group(1))
+        delimited_indexes.append(len(parts) - 1)
+        last_end = match.end()
+
+    parts.append(text[last_end:])
+
+    return parts, delimited_indexes
