@@ -82,3 +82,13 @@ def split_by_delimiter_with_indexes(text: str, delimiter: str) -> Tuple[List[str
     parts.append(text[last_end:])
 
     return parts, delimited_indexes
+
+def extract_markdown_images(text: str):
+    pattern = r"!\[(.*?)\]\((.*?)\)"
+    matches = re.findall(pattern, text)
+    return matches
+
+def extract_markdown_links(text: str):
+    pattern = r"\[(.*?)\]\((.*?)\)"
+    matches = re.findall(pattern, text)
+    return matches
