@@ -6,7 +6,7 @@ import sys
 from src.blocktype import markdown_to_html_node
 
 
-def create_sub_tree_from_dir(from_path: str = "static", to_path: str = "public"):
+def create_sub_tree_from_dir(from_path: str = "static", to_path: str = "docs"):
     directory = os.listdir(from_path)
     for item in directory:
         curr_path = os.path.join(from_path, item)
@@ -35,6 +35,9 @@ def extract_title(markdown: str) -> str:
 def replace_href(html: str, basepath: str) -> str:
     return html.replace("href=\"/", f"href=\"{basepath}")
 
+def replace_src(html: str, basepath: str) -> str:
+    return html.replace("src=\"/", f"src=\"{basepath}")
+
 
 def generate_page(from_path: str, template_path: str, to_path: str, basepath: str):
     print(f"Generating page from {from_path} to {to_path} using template {template_path}")
@@ -49,6 +52,7 @@ def generate_page(from_path: str, template_path: str, to_path: str, basepath: st
     rendered = template.replace("{{ Title }}", title).replace("{{ Content }}", html)
 
     rendered = replace_href(rendered, basepath)
+    rendered = replace_src(rendered, basepath)
 
     with open(to_path, "w") as f:
         f.write(rendered)
