@@ -142,7 +142,6 @@ def extract_link_pattern(pattern: Pattern[str], text: str) -> tuple[list, list[i
         last_end = match.end()
 
     if last_end < len(text):
-        print(f"last_end: {last_end}, len(text): {len(text)}, text: {text[last_end:]}")
         parts.append(text[last_end:])
 
     return parts, delimited_indexes
