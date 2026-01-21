@@ -55,6 +55,7 @@ def text_to_textnodes(text: str) -> list[TextNode]:
     nodes = split_nodes_link(nodes)
     return nodes
 
+
 def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
     new_nodes = []
     for node in old_nodes:
@@ -115,13 +116,15 @@ def split_by_delimiter_with_indexes(text: str, delimiter: str) -> Tuple[list[str
 
 def extract_markdown_images(text: str) -> Tuple[List, List[int]]:
     pattern = re.compile(r"!\[(.*?)\]\((.*?)\)")
-    return extract_l_pattern(pattern, text)
+    return extract_link_pattern(pattern, text)
+
 
 def extract_markdown_links(text: str) -> Tuple[list[str], list[int]]:
     pattern = re.compile(r"\[(.*?)\]\((.*?)\)")
-    return extract_l_pattern(pattern, text)
+    return extract_link_pattern(pattern, text)
 
-def extract_l_pattern(pattern: Pattern[str], text: str) -> tuple[list, list[int]]:
+
+def extract_link_pattern(pattern: Pattern[str], text: str) -> tuple[list, list[int]]:
     parts = []
     delimited_indexes: List[int] = []
 
@@ -152,4 +155,3 @@ def extract_pattern(pattern: Pattern[str], text: str) -> tuple[list[str], list[i
     parts.append(text[last_end:])
 
     return parts, delimited_indexes
-

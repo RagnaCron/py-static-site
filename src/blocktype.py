@@ -1,5 +1,8 @@
 from enum import Enum
 
+from src.parentnode import ParentNode
+from src.htmlnode import HtmlNode
+
 
 class BlockType(Enum):
     PARAGRAPH = "paragraph"
@@ -21,7 +24,8 @@ def markdown_to_blocks(markdown: str) -> list[str]:
 
 
 def block_to_block_type(block: str) -> BlockType:
-    if block.startswith("# ") or block.startswith("## ") or block.startswith("### ") or block.startswith("#### ") or block.startswith("##### ") or block.startswith("###### "):
+    if block.startswith("# ") or block.startswith("## ") or block.startswith("### ") or block.startswith(
+            "#### ") or block.startswith("##### ") or block.startswith("###### "):
         return BlockType.HEADING
     elif block.startswith("```\n") and block.endswith("\n```"):
         return BlockType.CODE
@@ -52,3 +56,15 @@ def block_to_block_type(block: str) -> BlockType:
         if is_correct:
             return BlockType.ORDERED_LIST
     return BlockType.PARAGRAPH
+
+
+def markdown_to_html_node(markdown: str) -> HtmlNode:
+    html_node = ParentNode("div", [])
+
+    # blocks = markdown_to_blocks(markdown)
+    # for block in blocks:
+    #     block_type = block_to_block_type(block)
+    #     text_nodes = text_to
+
+    return html_node
+
