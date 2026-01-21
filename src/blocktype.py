@@ -1,7 +1,8 @@
 from enum import Enum
 
+from src.leafnode import LeafNode
 from src.parentnode import ParentNode
-from src.htmlnode import HtmlNode
+from src.textnode import text_node_to_html_node, TextNode, TextType, text_to_textnodes
 
 
 class BlockType(Enum):
@@ -58,13 +59,50 @@ def block_to_block_type(block: str) -> BlockType:
     return BlockType.PARAGRAPH
 
 
-def markdown_to_html_node(markdown: str) -> HtmlNode:
+def paragraph_node(block) -> list[LeafNode]:
+    html_nodes = []
+    block = block.replace("\n", " ")
+    text_blocks = text_to_textnodes(block)
+    for text_block in text_blocks:
+        html_nodes.append(text_node_to_html_node(text_block))
+    return html_nodes
+
+
+def heading_node(block) -> LeafNode:
+    heading_level = block.count("#")
+    return LeafNode(f"h{heading_level}", block[heading_level:].strip())
+
+
+def quote_node(block) -> list[ParentNode]:
+    pass
+
+
+def unordered_list_node(block) -> list[ParentNode]:
+    pass
+
+
+def ordered_list_node(block) -> list[ParentNode]:
+    pass
+
+
+def markdown_to_html_node(markdown: str) -> ParentNode:
     html_node = ParentNode("div", [])
 
-    # blocks = markdown_to_blocks(markdown)
-    # for block in blocks:
-    #     block_type = block_to_block_type(block)
-    #     text_nodes = text_to
+    blocks = markdown_to_blocks(markdown)
+    for block in blocks:
+        block_type = block_to_block_type(block)
+        match block_type:
+            case BlockType.PARAGRAPH:
+                html_node.children.append(ParentNode("p", paragraph_node(block)))
+            case BlockType.HEADING:
+                html_node.children.append(heading_node(block))
+            # case BlockType.CODE:
+            #     html_node.children.append(ParentNode("pre", [text_node_to_html_node(TextNode(block, TextType.CODE))]))
+            # case BlockType.QUOTE:
+            #     html_node.children.append(ParentNode("blockquote", quote_node(block)))
+            # case BlockType.UNORDERED_LIST:
+            #     html_node.children.append(ParentNode("ul", unordered_list_node(block)))
+            # case BlockType.ORDERED_LIST:
+            #     html_node.children.append(ParentNode("ol", ordered_list_node(block)))
 
     return html_node
-
