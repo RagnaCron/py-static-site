@@ -73,8 +73,13 @@ def heading_node(block) -> LeafNode:
     return LeafNode(f"h{heading_level}", block[heading_level:].strip())
 
 
-def quote_node(block) -> list[ParentNode]:
-    pass
+def quote_node(block) -> list[LeafNode]:
+    html_nodes = []
+    block = block.replace("> ", "")
+    text_blocks = text_to_textnodes(block)
+    for text_block in text_blocks:
+        html_nodes.append(text_node_to_html_node(text_block))
+    return html_nodes
 
 
 def unordered_list_node(block) -> list[ParentNode]:
@@ -99,8 +104,8 @@ def markdown_to_html_node(markdown: str) -> ParentNode:
             case BlockType.CODE:
                 block = block.replace("```\n", "").replace("```", "")
                 html_node.children.append(ParentNode("pre", [text_node_to_html_node(TextNode(block, TextType.CODE))]))
-            # case BlockType.QUOTE:
-            #     html_node.children.append(ParentNode("blockquote", quote_node(block)))
+            case BlockType.QUOTE:
+                html_node.children.append(ParentNode("blockquote", quote_node(block)))
             # case BlockType.UNORDERED_LIST:
             #     html_node.children.append(ParentNode("ul", unordered_list_node(block)))
             # case BlockType.ORDERED_LIST:

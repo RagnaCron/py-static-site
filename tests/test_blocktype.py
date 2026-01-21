@@ -81,7 +81,7 @@ This is the same paragraph on a new line
         block_type = block_to_block_type(block)
         self.assertEqual(block_type, BlockType.HEADING)
 
-    def test_paragraphs(self):
+    def test_paragraph_block(self):
         md = """
 This is **bolded** paragraph
 text in a p
@@ -98,7 +98,7 @@ This is another paragraph with _italic_ text and `code` here
             "<div><p>This is <b>bolded</b> paragraph text in a p tag here</p><p>This is another paragraph with <i>italic</i> text and <code>code</code> here</p></div>",
         )
 
-    def test_headings(self):
+    def test_heading_block(self):
         md = """
 # Heading 1
 
@@ -116,7 +116,7 @@ This is another paragraph with _italic_ text and `code` here
         html = node.to_html()
         self.assertEqual(html, "<div><h1>Heading 1</h1><h2>Heading 2</h2><h3>Heading 3</h3><h4>Heading 4</h4><h5>Heading 5</h5><h6>Heading 6</h6></div>")
 
-    def test_codeblock(self):
+    def test_code_block(self):
         md = """
 ```
 This is text that _should_ remain
@@ -130,6 +130,19 @@ the **same** even with inline stuff
             html,
             "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
         )
+
+    def test_quote_block(self):
+        md = """
+> A nice single line quote
+
+> A multi-line quote
+> with multiple lines
+> to quote
+"""
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(html, "<div><blockquote>A nice single line quote</blockquote><blockquote>A multi-line quote\nwith multiple lines\nto quote</blockquote></div>")
+
 
 
 if __name__ == "__main__":
