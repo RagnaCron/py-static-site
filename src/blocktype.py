@@ -69,9 +69,15 @@ def paragraph_node(block) -> list[LeafNode]:
     return html_nodes
 
 
-def heading_node(block) -> LeafNode:
+def heading_node(block) -> ParentNode:
+    html_nodes = []
     heading_level = block.count("#")
-    return LeafNode(f"h{heading_level}", block[heading_level:].strip())
+    block = block.replace("#", "").strip()
+    text_blocks = text_to_textnodes(block)
+    for text_block in text_blocks:
+        html_nodes.append(text_node_to_html_node(text_block))
+    parent_node = ParentNode(f"h{heading_level}", html_nodes)
+    return parent_node
 
 
 def quote_node(block) -> list[LeafNode]:
