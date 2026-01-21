@@ -90,9 +90,12 @@ def unordered_list_node(block) -> list[ParentNode]:
     blocks = block.split("\n")
     text_blocks = []
     for block in blocks:
-        text_blocks.extend(text_to_textnodes(block))
+        text_blocks.append(text_to_textnodes(block))
     for text_block in text_blocks:
-        html_nodes.append(ParentNode("li", [text_node_to_html_node(text_block)]))
+        nodes = []
+        for n in text_block:
+            nodes.append(text_node_to_html_node(n))
+        html_nodes.append(ParentNode("li", nodes))
     return html_nodes
 
 

@@ -33,3 +33,15 @@ the **same** even with inline stuff
             html,
             "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
         )
+
+    def test_bold_unordered_block(self):
+        md = """
+- **A Historical Touchstone**: His legacy
+- A hello
+- _Italic_ heheheheh
+"""
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(html, "<div><ul><li><b>A Historical Touchstone</b>: His legacy</li><li>A hello</li><li><i>Italic</i> heheheheh</li></ul></div>")
+
+

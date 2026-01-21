@@ -159,9 +159,5 @@ def extract_pattern(pattern: Pattern[str], text: str) -> tuple[list[str], list[i
         last_end = match.end()
 
     parts.append(text[last_end:])
-    slimmed = []
-    for part in parts:
-        if part != "":
-            slimmed.append(part)
 
-    return slimmed, delimited_indexes
+    return parts, delimited_indexes
