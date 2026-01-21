@@ -143,7 +143,18 @@ the **same** even with inline stuff
         html = node.to_html()
         self.assertEqual(html, "<div><blockquote>A nice single line quote</blockquote><blockquote>A multi-line quote\nwith multiple lines\nto quote</blockquote></div>")
 
+    def test_unordered_list_block(self):
+        md = """
+- this is a list item
+- so is this
+- and this
 
+- another list item
+- in another list
+"""
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(html, "<div><ul><li>this is a list item</li><li>so is this</li><li>and this</li></ul><ul><li>another list item</li><li>in another list</li></ul></div>")
 
 if __name__ == "__main__":
     unittest.main()
