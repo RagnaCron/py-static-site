@@ -96,8 +96,9 @@ def markdown_to_html_node(markdown: str) -> ParentNode:
                 html_node.children.append(ParentNode("p", paragraph_node(block)))
             case BlockType.HEADING:
                 html_node.children.append(heading_node(block))
-            # case BlockType.CODE:
-            #     html_node.children.append(ParentNode("pre", [text_node_to_html_node(TextNode(block, TextType.CODE))]))
+            case BlockType.CODE:
+                block = block.replace("```\n", "").replace("```", "")
+                html_node.children.append(ParentNode("pre", [text_node_to_html_node(TextNode(block, TextType.CODE))]))
             # case BlockType.QUOTE:
             #     html_node.children.append(ParentNode("blockquote", quote_node(block)))
             # case BlockType.UNORDERED_LIST:
