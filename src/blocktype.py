@@ -23,7 +23,7 @@ def markdown_to_blocks(markdown: str) -> list[str]:
 def block_to_block_type(block: str) -> BlockType:
     if block.startswith("# ") or block.startswith("## ") or block.startswith("### ") or block.startswith("#### ") or block.startswith("##### ") or block.startswith("###### "):
         return BlockType.HEADING
-    elif block.startswith("```\n") and block.endswith("```"):
+    elif block.startswith("```\n") and block.endswith("\n```"):
         return BlockType.CODE
     elif block.startswith("> "):
         is_correct = True
