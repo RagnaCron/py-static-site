@@ -1,4 +1,5 @@
 import os
+import pathlib
 import shutil
 
 from src.blocktype import markdown_to_html_node
@@ -43,18 +44,26 @@ def generate_page(from_path: str, template_path: str, to_path: str):
     html = markdown_to_html_node(content).to_html()
     rendered = template.replace("{{ Title }}", title).replace("{{ Content }}", html)
 
-    os.makedirs(os.path.dirname(to_path), exist_ok=True)
     with open(to_path, "w") as f:
         f.write(rendered)
 
 
+def generate_pages_recursive(dir_path_content: str, template_path: str, dest_dir_path: str):
+    contents = os.listdir(dir_path_content)
+    for content in contents:
+        path = os.path.join(dir_path_content, content)
+        if os.path.isdir(path):
+            dest_path = os.path.join(dest_dir_path, content)
+            os.makedirs(os.path.abspath(dest_path), exist_ok=True)
+            generate_pages_recursive(path, template_path, dest_path)
+        else:
+            basename = pathlib.Path(content).stem
+            generate_page(path, template_path, os.path.join(dest_dir_path, basename + ".html"))
+
+
 def main():
     copy_static_files_to("public")
-    generate_page("content/index.md", "template.html", "public/index.html")
-    generate_page("content/blog/glorfindel/index.md", "template.html", "public/blog/glorfindel/index.html")
-    generate_page("content/blog/majesty/index.md", "template.html", "public/blog/majesty/index.html")
-    generate_page("content/blog/tom/index.md", "template.html", "public/blog/tom/index.html")
-    generate_page("content/contact/index.md", "template.html", "public/contact/index.html")
+    generate_pages_recursive("content", "template.html", "public")
 
 
 if __name__ == "__main__":
