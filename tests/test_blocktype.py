@@ -134,7 +134,9 @@ the **same** even with inline stuff
 
     def test_quote_block(self):
         md = """
-> A nice single line quote
+> 'A nice single line quote'
+> 
+> -- a nice quote
 
 > A multi-line quote
 > with multiple lines
@@ -143,7 +145,7 @@ the **same** even with inline stuff
         node = markdown_to_html_node(md)
         html = node.to_html()
         self.assertEqual(html,
-                         "<div><blockquote>A nice single line quote</blockquote><blockquote>A multi-line quote\nwith multiple lines\nto quote</blockquote></div>")
+                         "<div><blockquote>'A nice single line quote'  -- a nice quote</blockquote><blockquote>A multi-line quote with multiple lines to quote</blockquote></div>")
 
     def test_unordered_list_block(self):
         md = """

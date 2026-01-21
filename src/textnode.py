@@ -67,7 +67,10 @@ def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
                 if i in indices:
                     new_nodes.append(TextNode(parts[i][0], TextType.IMAGE, parts[i][1]))
                 else:
-                    new_nodes.append(TextNode(parts[i], TextType.TEXT))
+                    text_node = TextNode(parts[i], TextType.TEXT)
+                    if text_node.text == "":
+                        continue
+                    new_nodes.append(text_node)
     return new_nodes
 
 
@@ -82,7 +85,10 @@ def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
                 if i in indices:
                     new_nodes.append(TextNode(parts[i][0], TextType.LINK, parts[i][1]))
                 else:
-                    new_nodes.append(TextNode(parts[i], TextType.TEXT))
+                    text_node = TextNode(parts[i], TextType.TEXT)
+                    if text_node.text == "":
+                        continue
+                    new_nodes.append(text_node)
     return new_nodes
 
 
@@ -136,6 +142,7 @@ def extract_link_pattern(pattern: Pattern[str], text: str) -> tuple[list, list[i
         last_end = match.end()
 
     if last_end < len(text):
+        print(f"last_end: {last_end}, len(text): {len(text)}, text: {text[last_end:]}")
         parts.append(text[last_end:])
 
     return parts, delimited_indexes
@@ -153,5 +160,9 @@ def extract_pattern(pattern: Pattern[str], text: str) -> tuple[list[str], list[i
         last_end = match.end()
 
     parts.append(text[last_end:])
+    slimmed = []
+    for part in parts:
+        if part != "":
+            slimmed.append(part)
 
-    return parts, delimited_indexes
+    return slimmed, delimited_indexes

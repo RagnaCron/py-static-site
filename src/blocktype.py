@@ -75,9 +75,11 @@ def heading_node(block) -> LeafNode:
 
 def quote_node(block) -> list[LeafNode]:
     html_nodes = []
-    block = block.replace("> ", "")
+    block = block.replace("> ", "").replace("\n", " ")
     text_blocks = text_to_textnodes(block)
     for text_block in text_blocks:
+        if text_block.text == "":
+            continue
         html_nodes.append(text_node_to_html_node(text_block))
     return html_nodes
 
