@@ -28,34 +28,34 @@ This is the same paragraph on a new line
         block = "This is a paragraph"
         block_type = block_to_block_type(block)
         self.assertEqual(block_type, BlockType.PARAGRAPH)
-        
+
     def test_block_to_block_type_unordered_list(self):
         block = "- This is a list"
         block_type = block_to_block_type(block)
         self.assertEqual(block_type, BlockType.UNORDERED_LIST)
-        
+
     def test_block_to_block_type_ordered_list(self):
         block = """1. first item
 2. second item
 3. third item"""
         block_type = block_to_block_type(block)
         self.assertEqual(block_type, BlockType.ORDERED_LIST)
-        
+
     def test_block_to_block_type_code(self):
         block = "```\npython\nprint('hello world')\n```"
         block_type = block_to_block_type(block)
         self.assertEqual(block_type, BlockType.CODE)
-        
+
     def test_block_to_block_type_quoted(self):
         block = "> This is a quoted text"
         block_type = block_to_block_type(block)
         self.assertEqual(block_type, BlockType.QUOTE)
-        
+
     def test_block_to_block_type_heading_1(self):
         block = "# This is a heading 1"
         block_type = block_to_block_type(block)
         self.assertEqual(block_type, BlockType.HEADING)
-        
+
     def test_block_to_block_type_heading_2(self):
         block = "## This is heading 2"
         block_type = block_to_block_type(block)
@@ -114,7 +114,8 @@ This is another paragraph with _italic_ text and `code` here
 """
         node = markdown_to_html_node(md)
         html = node.to_html()
-        self.assertEqual(html, "<div><h1>Heading 1</h1><h2>Heading 2</h2><h3>Heading 3</h3><h4>Heading 4</h4><h5>Heading 5</h5><h6>Heading 6</h6></div>")
+        self.assertEqual(html,
+                         "<div><h1>Heading 1</h1><h2>Heading 2</h2><h3>Heading 3</h3><h4>Heading 4</h4><h5>Heading 5</h5><h6>Heading 6</h6></div>")
 
     def test_code_block(self):
         md = """
@@ -141,7 +142,8 @@ the **same** even with inline stuff
 """
         node = markdown_to_html_node(md)
         html = node.to_html()
-        self.assertEqual(html, "<div><blockquote>A nice single line quote</blockquote><blockquote>A multi-line quote\nwith multiple lines\nto quote</blockquote></div>")
+        self.assertEqual(html,
+                         "<div><blockquote>A nice single line quote</blockquote><blockquote>A multi-line quote\nwith multiple lines\nto quote</blockquote></div>")
 
     def test_unordered_list_block(self):
         md = """
@@ -154,7 +156,21 @@ the **same** even with inline stuff
 """
         node = markdown_to_html_node(md)
         html = node.to_html()
-        self.assertEqual(html, "<div><ul><li>this is a list item</li><li>so is this</li><li>and this</li></ul><ul><li>another list item</li><li>in another list</li></ul></div>")
+        self.assertEqual(html,
+                         "<div><ul><li>this is a list item</li><li>so is this</li><li>and this</li></ul><ul><li>another list item</li><li>in another list</li></ul></div>")
+
+    def test_ordered_list_block(self):
+        md = """
+1. first item
+2. second item
+3. third item
+
+1. and some more
+2. and some more
+"""
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(html, "<div><ol><li>first item</li><li>second item</li><li>third item</li></ol><ol><li>and some more</li><li>and some more</li></ol></div>")
 
 if __name__ == "__main__":
     unittest.main()
