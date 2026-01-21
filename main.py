@@ -42,6 +42,8 @@ def generate_page(from_path: str, template_path: str, to_path: str):
     title = extract_title(content)
     html = markdown_to_html_node(content).to_html()
     rendered = template.replace("{{ Title }}", title).replace("{{ Content }}", html)
+
+    os.makedirs(os.path.dirname(to_path), exist_ok=True)
     with open(to_path, "w") as f:
         f.write(rendered)
 
@@ -49,6 +51,9 @@ def generate_page(from_path: str, template_path: str, to_path: str):
 def main():
     copy_static_files_to("public")
     generate_page("content/index.md", "template.html", "public/index.html")
+    generate_page("content/blog/glorfindel/index.md", "template.html", "public/blog/glorfindel/index.html")
+    generate_page("content/blog/majesty/index.md", "template.html", "public/blog/majesty/index.html")
+    generate_page("content/blog/tom/index.md", "template.html", "public/blog/tom/index.html")
 
 
 if __name__ == "__main__":
