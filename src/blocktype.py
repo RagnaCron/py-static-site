@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Any
 
 from src.leafnode import LeafNode
 from src.parentnode import ParentNode
@@ -88,15 +89,7 @@ def unordered_list_node(block) -> list[ParentNode]:
     html_nodes = []
     block = block.replace("- ", "")
     blocks = block.split("\n")
-    text_blocks = []
-    for block in blocks:
-        text_blocks.append(text_to_textnodes(block))
-    for text_block in text_blocks:
-        nodes = []
-        for n in text_block:
-            nodes.append(text_node_to_html_node(n))
-        html_nodes.append(ParentNode("li", nodes))
-    return html_nodes
+    return create_list_node(blocks, html_nodes)
 
 
 def ordered_list_node(block) -> list[ParentNode]:
@@ -106,11 +99,18 @@ def ordered_list_node(block) -> list[ParentNode]:
     for block in block.split("\n"):
         blocks.append(block.replace(f"{counter}. ", ""))
         counter += 1
+    return create_list_node(blocks, html_nodes)
+
+
+def create_list_node(blocks: list[Any], html_nodes: list[Any]) -> list[Any]:
     text_blocks = []
     for block in blocks:
-        text_blocks.extend(text_to_textnodes(block))
+        text_blocks.append(text_to_textnodes(block))
     for text_block in text_blocks:
-        html_nodes.append(ParentNode("li", [text_node_to_html_node(text_block)]))
+        nodes = []
+        for n in text_block:
+            nodes.append(text_node_to_html_node(n))
+        html_nodes.append(ParentNode("li", nodes))
     return html_nodes
 
 
